@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
+@EnableConfigurationProperties(RsaKeyProperties.class)
 @SpringBootApplication
 public class CardatabaseApplication implements CommandLineRunner {
 	private static final Logger logger =
@@ -17,7 +19,6 @@ public class CardatabaseApplication implements CommandLineRunner {
 
 	@Autowired
 	private CarRepository repository;
-
 
 	@Autowired
 	private OwnerRepository orepository;

@@ -2,26 +2,41 @@ package com.example.cardatabase.web;
 
 import com.example.cardatabase.domain.AccountCredentials;
 //import com.example.cardatabase.service.JwtService;
+import com.example.cardatabase.service.TokenService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-//@RestController
-//public class LoginController {
+@RestController
+public class AuthController {
 //    @Autowired
 //    private JwtService jwtService;
-//
-//    @Autowired
-//    AuthenticationManager authenticationManager;
-//
+
+    public static final Logger LOG = LoggerFactory.getLogger(AuthController.class);
+
+    private final TokenService tokenService;
+
+    public AuthController(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
+
+    @PostMapping("/token")
+    public String token(Authentication authentication){
+        LOG.debug("Token requested for user: '{}'", authentication.getName());
+        String token = tokenService.generateToken(authentication);
+        LOG.debug("Token returned: '{}'", token);
+        return token;
+    }
+
+    @Autowired
+    AuthenticationManager authenticationManager;
+
 //    @RequestMapping(value="/login", method=RequestMethod.POST)
 //    public ResponseEntity<?> getToken(@RequestBody AccountCredentials credentials) {
 //        UsernamePasswordAuthenticationToken creds =
@@ -32,7 +47,8 @@ import org.springframework.web.bind.annotation.RestController;
 //        Authentication auth = authenticationManager.authenticate(creds);
 //
 //        // Generate token
-//        String jwts = jwtService.getToken(auth.getName());
+////        String jwts = jwtService.getToken(auth.getName());
+//        String jwts = tokenService.generateToken(auth);
 //
 //        // Build response with the generated token
 //        return ResponseEntity.ok()
@@ -41,4 +57,4 @@ import org.springframework.web.bind.annotation.RestController;
 //                .build();
 //
 //    }
-//}
+}
